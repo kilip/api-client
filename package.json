@@ -5,11 +5,16 @@
   "repository": "kilip/api-client",
   "description": "ApiPlatform reusable client library",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "FORCE_COLOR=1 pnpm --filter './packages/**' prepack",
     "build:stub": "pnpm --filter './packages/**' prepack --stub",
-    "cleanup": "rimraf 'packages/**/node_modules'",
+    "cleanup": "rimraf 'packages/**/node_modules' 'playgrond/nuxt/node_modules'",
     "lint": "eslint --ext .vue,.ts,.js,.mjs .",
+    "play:nuxt": "cd playground/nuxt && nuxt dev",
+    "play:nuxt:prepare": "cd playground/nuxt && nuxi prepare playground/nuxt",
     "test": "vitest",
     "test:unit": "JITI_ESM_RESOLVE=1 vitest run --dir packages",
     "typecheck": "tsc --noEmit"
@@ -17,15 +22,20 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "resolutions": {
+    "@kilip/api-client-core": "workspace:*",
+    "@kilip/api-client-pinia": "workspace:*"
+  },
   "devDependencies": {
-    "@kilip/api-core": "workspace:*",
+    "@kilip/api-client-core": "workspace:*",
+    "@kilip/api-client-pinia": "workspace:*",
     "@types/node": "^18.11.18",
     "@types/rimraf": "^3.0.2",
     "@typescript-eslint/parser": "^5.49.0",
     "eslint": "^8.33.0",
+    "jiti": "^1.16.2",
     "rimraf": "^4.1.2",
     "typescript": "^4.9.4",
-    "unbuild": "^1.1.1",
     "vitest": "^0.28.3",
     "vitest-fetch-mock": "^0.2.1"
   },

@@ -17,7 +17,7 @@ export interface ApiListState<T> {
   error?: string
 }
 
-export interface ApiFindData<T> {
+export interface ApiFindResponse<T> {
   items: T[]
   view: ApiListView | undefined
   error: ApiError | null

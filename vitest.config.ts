@@ -5,6 +5,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '#api-core': resolve('./packages/core/src'),
+      '#api-pinia': resolve('./packages/pinia/src')
     }
   },
   test: {

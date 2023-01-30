@@ -1,32 +1,26 @@
-import { Mock, afterEach, beforeEach, describe, expect, expectTypeOf, it, test, vi } from 'vitest';
+import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 
 
 import {
   useApiClient,
-  ApiResponseError,
   ApiSubmissionErrors,
-  ApiClientFetchOptions,
-  ApiClientFetchData
-} from '#api-core'
+  ApiClientFetchConfig} from '#api-core'
 
 import { User } from '../types';
 import { useApiCore } from '../../src/composables/useApiCore';
-import { D } from 'vitest/dist/types-aac763a5';
 import { ApiFetchResponse } from '../../src/types';
-import { parseJsonError } from '../../src/utils/helpers';
-import { doFetch } from './fetch';
 
 vi.mock('#api-core/composables/useApiToken')
 
-
+const core = useApiCore()
+core.setOption('token', 'token')
 
 describe('useApiClient', () => {
 
 
   beforeEach(async () => {
     fetchMock.resetMocks
-    const core = useApiCore()
-    core.hookOnce('client:fetch', doFetch)
+
   })
 
   it('succesfully fetch request', async() => {
@@ -34,9 +28,32 @@ describe('useApiClient', () => {
     fetchMock.mockResponseOnce(JSON.stringify(json))
 
     const client = useApiClient()
-    const { error, data } = await client<User[],Error>('/test')
 
+    const { data } = await client<User[]>('/test')
     expect(data).toEqual(json)
+  })
+
+  it('should call pre-fetch and post-fetch hooks during fetch', async () => {
+    const mPreFetch = vi.fn()
+    const mPostFetch = vi.fn()
+    //@TODO: provide test for header addition
+    const updateHeader = async ({options}) => {
+      options.headers['Authorization'] = 'Bearer token'
+    }
+
+    core.hookOnce('client:pre-fetch', updateHeader)
+    core.hookOnce('client:pre-fetch', mPreFetch)
+    core.hookOnce('client:post-fetch', mPostFetch)
+
+    const json = [{id: 'test'}]
+    fetchMock.mockResponseOnce(JSON.stringify(json))
+
+    const client = useApiClient()
+
+    const data = await client<User>('/test')
+    expectTypeOf(data).toMatchTypeOf<ApiFetchResponse<User>>()
+    expect(mPreFetch).toBeCalledTimes(1)
+    expect(mPostFetch).toBeCalledTimes(1)
   })
 
   it('handle fetch json error', async() => {
@@ -47,7 +64,7 @@ describe('useApiClient', () => {
     fetchMock.mockResponseOnce(JSON.stringify(json), {status: 401})
 
     const client = useApiClient()
-    const { error } = await client<any,Error>('/test')
+    const { error } = await client('/test')
 
     expect(error).toBeDefined()
     expect(error.message).toEqual('error message')
@@ -66,7 +83,7 @@ describe('useApiClient', () => {
     })
 
     const client = useApiClient()
-    const { error } = await client<any, ApiResponseError>('/test')
+    const { error } = await client('/test')
 
     expect(error.title).toBe(json.title)
     expect(error.message).toBe(json.detail)
@@ -92,7 +109,7 @@ describe('useApiClient', () => {
     })
 
     const client = useApiClient()
-    const { error } = await client<any, ApiSubmissionErrors>('/test')
+    const { error } = await client('/test')
 
     expect(error).toBeDefined()
 
@@ -111,7 +128,7 @@ describe('useApiClient', () => {
     })
 
     const client = useApiClient()
-    const { error, data } = await client<User[],Error>('/test', {
+    const { error, data } = await client('/test', {
       onResponse: mock,
       onError: mock
     })

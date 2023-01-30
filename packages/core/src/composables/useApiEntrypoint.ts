@@ -1,7 +1,9 @@
-import { useConfig } from "./useConfig"
+import { useApiCore } from "./useApiCore"
 
 export const useApiEntrypoint = (): string => {
-  const config  = useConfig()
+  const core = useApiCore()
+  const entrypoint  = core.getOption('entrypoint')
+  const prefix = core.getOption('prefix')
 
-  return `${config.get('entrypoint')}${config.get('prefix')}`
+  return `${entrypoint}${prefix}`
 }

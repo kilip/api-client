@@ -12,6 +12,12 @@
     "paths": {
       "#api-core": [
         "./packages/core/src/index"
+      ],
+      "#api-pinia": [
+        "./packages/pinia/src/index"
+      ],
+      "#api-nuxt": [
+        "./packages/nuxt/src"
       ]
     }
   }

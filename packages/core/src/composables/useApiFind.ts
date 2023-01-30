@@ -1,19 +1,17 @@
-import { ApiFindData, ApiListView, ApiPagedCollection } from "../types"
+import { ApiFindResponse, ApiListView, ApiPagedCollection } from "../types"
 import { ApiClientFetchOptions, useApiClient } from './useApiClient'
-import { ApiError } from "../error/ApiError"
 
 export const useApiFind = () => {
   const client = useApiClient()
 
-  return async <T> (path: string, params = {}): Promise<ApiFindData<T>> => {
+  return async <T> (path: string, params = {}): Promise<ApiFindResponse<T>> => {
     let items: T[] = []
     let view: ApiListView|undefined = undefined
-    let hubUrl: URL|undefined = undefined
     let total: number = 0
 
     const options: ApiClientFetchOptions = { params }
 
-    const {data, error} = await client<T, ApiError>(path, options)
+    const {data, error, hubUrl} = await client<T>(path, options)
 
     if(!error){
       const value = data as ApiPagedCollection<T>

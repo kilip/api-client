@@ -2,20 +2,23 @@ import { Mock, beforeEach, describe, expect, test, vi } from "vitest";
 import { useApiFind } from "#api-core";
 import { User } from "../types";
 import { useApiCore } from "../../src/composables/useApiCore";
-import { doFetch } from "./fetch";
 
 describe('useApiFind', () => {
   const json = [{id: 'test'}]
 
   beforeEach(async () => {
     fetchMock.resetMocks
-
-    fetchMock.mockResponseOnce(JSON.stringify({
+    const data = {
       'hydra:member': json,
       'hydra:view': {},
       'hydra:totalItems': 1
-    }))
-    useApiCore().hookOnce('client:fetch', doFetch)
+    }
+
+    fetchMock.mockResponseOnce(JSON.stringify(data), {
+      headers: {
+        link: `<https://localhost/.well-known/mercure>; rel="mercure"`
+      }
+    })
 
   })
 
@@ -32,6 +35,7 @@ describe('useApiFind', () => {
     expect(items).toStrictEqual(json)
     expect(total).toBe(1)
     expect(view).toBeDefined()
-    expect(error).toBeNull()
+    expect(error).toBeUndefined()
+    expect(hubUrl).toStrictEqual(new URL('https://localhost/.well-known/mercure'))
   })
 })

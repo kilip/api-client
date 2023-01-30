@@ -1,11 +1,9 @@
 {
-  "name": "@kilip/api-client-core",
+  "name": "@kilip/api-client-pinia",
   "version": "0.1.0",
   "repository": "kilip/api-client",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
@@ -14,17 +12,20 @@
     "dist"
   ],
   "imports": {
-    "#api-core": "./dist/index.mjs"
+    "#api-nuxt": "./dist/index.mjs"
   },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
   "scripts": {
     "prepack": "unbuild"
   },
   "dependencies": {
-    "hookable": "^5.4.2",
-    "isomorphic-unfetch": "^4.0.2",
-    "qs": "6.11.0"
+    "@kilip/api-client-core": "^0.1.0",
+    "pinia": "^2.0.29"
   },
   "devDependencies": {
-    "expect-type": "^0.15.0"
+    "@pinia/testing": "^0.0.14",
+    "@vue/runtime-dom": "^3.2.45",
+    "vue": "^3.2.45"
   }
 }

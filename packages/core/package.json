@@ -1,0 +1,19 @@
+{
+  "name": "@kilip/api-core",
+  "version": "0.1.0",
+  "repository": "kilip/api-client",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "unbuild"
+  },
+  "dependencies": {
+    "qs": "6.11.0",
+    "hookable": "^5.4.2"
+  }
+}

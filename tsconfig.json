@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "#api-core": [
+        "./packages/core/src/index"
+      ]
+    }
+  }
+}

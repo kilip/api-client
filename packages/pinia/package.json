@@ -1,31 +1,26 @@
 {
   "name": "@kilip/api-client-pinia",
   "version": "0.1.0",
-  "repository": "kilip/api-client",
+  "description": "Api Platform client pinia integration",
   "license": "MIT",
+  "sideEffects": false,
   "type": "module",
-  "exports": {
-    ".": "./dist/index.mjs",
-    "./package.json": "./package.json"
-  },
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "imports": {
-    "#api-nuxt": "./dist/index.mjs"
-  },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
   "scripts": {
     "prepack": "unbuild"
   },
   "dependencies": {
     "@kilip/api-client-core": "^0.1.0",
-    "pinia": "^2.0.29"
+    "pinia": "^2.0.29",
+    "vue": "^3.2.45"
   },
   "devDependencies": {
+    "@kilip/api-client-core": "workspace:^0.1.0",
     "@pinia/testing": "^0.0.14",
-    "@vue/runtime-dom": "^3.2.45",
-    "vue": "^3.2.45"
+    "ofetch": "^1.0.0"
   }
 }

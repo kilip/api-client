@@ -6,19 +6,33 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
+    "strict": true,
+    "noImplicitAny": true,
+    "allowJs": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
     "types": [
+      "vitest",
       "node"
     ],
     "paths": {
-      "#api-core": [
+      "@kilip/api-client-core": [
         "./packages/core/src/index"
       ],
-      "#api-pinia": [
+      "@kilip/api-client-pinia": [
         "./packages/pinia/src/index"
       ],
-      "#api-nuxt": [
-        "./packages/nuxt/src"
-      ]
+      "@kilip/api-client-nuxt": [
+        "./packages/nuxt/src/index"
+      ],
     }
-  }
+  },
+  "exclude": [
+    "**/dist/**",
+    "**/.nuxt/**",
+    "**/nuxt.d.ts",
+    "**/playground/**",
+    "**/test/fixtures/**"
+  ]
 }

@@ -1,46 +1,47 @@
 {
-  "name": "@kilip/api-client",
-  "version": "0.0.0",
+  "name": "api-client",
+  "version": "1.0.0",
+  "description": "Library to integrate API Platform based project into Vue, React, Nuxt, Next",
   "private": true,
-  "repository": "kilip/api-client",
-  "description": "ApiPlatform reusable client library",
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "build": "FORCE_COLOR=1 pnpm --filter './packages/**' prepack",
     "build:stub": "pnpm --filter './packages/**' prepack --stub",
-    "cleanup": "rimraf 'packages/**/node_modules' 'playgrond/nuxt/node_modules'",
+    "cleanup": "rimraf 'packages/**/node_modules' 'node_modules'",
     "lint": "eslint --ext .vue,.ts,.js,.mjs .",
-    "play:nuxt": "cd playground/nuxt && nuxt dev",
-    "play:nuxt:prepare": "cd playground/nuxt && nuxi prepare playground/nuxt",
-    "test": "vitest",
-    "test:unit": "JITI_ESM_RESOLVE=1 vitest run --dir packages",
-    "typecheck": "tsc --noEmit"
+    "lint:fix": "pnpm run lint --write",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anthonius Munthi",
   "license": "MIT",
-  "resolutions": {
-    "@kilip/api-client-core": "workspace:*",
-    "@kilip/api-client-pinia": "workspace:*"
-  },
   "devDependencies": {
-    "@kilip/api-client-core": "workspace:*",
-    "@kilip/api-client-pinia": "workspace:*",
     "@types/node": "^18.11.18",
     "@types/rimraf": "^3.0.2",
-    "@typescript-eslint/parser": "^5.49.0",
+    "@types/semver": "^7.3.13",
+    "babel-eslint": "^10.1.0",
     "eslint": "^8.33.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsdoc": "^39.7.4",
+    "h3": "^1.1.0",
     "jiti": "^1.16.2",
+    "lint-staged": "^13.1.0",
+    "listhen": "^1.0.2",
+    "prettier": "^2.8.3",
     "rimraf": "^4.1.2",
-    "typescript": "^4.9.4",
-    "vitest": "^0.28.3",
-    "vitest-fetch-mock": "^0.2.1"
+    "semver": "^7.3.8",
+    "typescript": "^4.9.5",
+    "unbuild": "^1.1.1",
+    "vite": "^4.0.4",
+    "vitest": "^0.28.3"
   },
-  "exclude": [
-    "**/dist/**",
-    "**/test/fixtures/**"
-  ]
+  "lint-staged": {
+    "*.js": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  }
 }

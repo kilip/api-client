@@ -1,25 +1,19 @@
-import { defineConfig } from 'vitest/config'
-import { resolve } from 'node:path'
+import { resolve } from 'path'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   resolve: {
     alias: {
-      '#api-core': resolve('./packages/core/src'),
-      '#api-pinia': resolve('./packages/pinia/src')
+      '@kilip/api-client-core': resolve('./packages/core/src/index.ts'),
+      '@kilip/api-client-mocks': resolve('./test/mocks')
     }
   },
+  esbuild: {
+    tsconfigRaw: '{}'
+  },
   test: {
-    globals: true,
-    include: [
-      '**/test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'
-    ],
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**', '**/cypress/**',
-       '**/.{idea,git,cache,output,temp}/**', '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*'
-    ],
-    "setupFiles": [
-      '/test/setup.ts'
+    setupFiles: [
+      '/test/mocks/setupTest.js'
     ]
   }
 })

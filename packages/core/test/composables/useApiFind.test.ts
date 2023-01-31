@@ -1,41 +1,30 @@
-import { Mock, beforeEach, describe, expect, test, vi } from "vitest";
-import { useApiFind } from "#api-core";
+import { describe, expect, it } from "vitest";
+import { useApiFind } from "../../src";
 import { User } from "../types";
-import { useApiCore } from "../../src/composables/useApiCore";
+import { useFetchMockData } from "../../../../test/mocks/setupTest";
 
 describe('useApiFind', () => {
-  const json = [{id: 'test'}]
 
-  beforeEach(async () => {
-    fetchMock.resetMocks
-    const data = {
-      'hydra:member': json,
-      'hydra:view': {},
-      'hydra:totalItems': 1
-    }
+  useFetchMockData()
 
-    fetchMock.mockResponseOnce(JSON.stringify(data), {
-      headers: {
-        link: `<https://localhost/.well-known/mercure>; rel="mercure"`
-      }
-    })
+  it('should find resource', async () => {
 
-  })
-
-  test('successfully find items', async() => {
     const find = useApiFind()
+
     const {
       items,
-      view,
-      total,
       hubUrl,
       error,
-    } = await find<User>('/user')
+      view,
+      totalItems
+    } = await find<User>('/users')
 
-    expect(items).toStrictEqual(json)
-    expect(total).toBe(1)
-    expect(view).toBeDefined()
+    expect(items).toBeDefined()
+    expect(hubUrl).toBeDefined()
     expect(error).toBeUndefined()
-    expect(hubUrl).toStrictEqual(new URL('https://localhost/.well-known/mercure'))
+    expect(view).toBeDefined()
+    expect(totalItems).toBeDefined()
+
+    expect(totalItems).toBe(10)
   })
 })

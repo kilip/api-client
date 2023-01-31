@@ -3,13 +3,9 @@ import { defineBuildConfig } from 'unbuild'
 export default defineBuildConfig({
   declaration: true,
   entries: [
-    { input: 'src/index'}
-  ],
-  dependencies: [
-    'vue',
-    'pinia'
+    'src/index'
   ],
   externals: [
-    '@kilip/api-client-core'
+    'ofetch'
   ]
 })

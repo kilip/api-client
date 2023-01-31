@@ -78,4 +78,4 @@ jobs:
         run: pnpm build:stub
 
       - name: Test (unit)
-        run: pnpm test:unit
+        run: pnpm test

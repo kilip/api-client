@@ -1,5 +1,4 @@
-export * from './client'
+export * from './api'
 export * from './core'
 export * from './entrypoint'
 export * from './find'
-export * from './types'

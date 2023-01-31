@@ -33,6 +33,7 @@
     "**/.nuxt/**",
     "**/nuxt.d.ts",
     "**/playground/**",
-    "**/test/fixtures/**"
+    "**/test/fixtures/**",
+    "packages/nuxt"
   ]
 }

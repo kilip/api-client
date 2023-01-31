@@ -1,6 +1,6 @@
 import type { FetchError } from 'ofetch'
-import type { ApiAssociativeArray } from './types'
-import { useApiClient } from './client'
+import type { ApiQueryParams } from './api'
+import { useApi } from './api'
 
 export interface ApiPagedListView {
   '@id': string;
@@ -28,15 +28,11 @@ export interface ApiFindResponse<DataT> {
   totalItems: number|undefined
 }
 
-export interface ApiQueryParams {
-  [key: string]: number|string
-}
-
 export const useApiFind = () => {
-  const client = useApiClient()
+  const api = useApi()
 
-  return async <DataT>(path: string, params?: ApiAssociativeArray<string|number|undefined>): Promise<ApiFindResponse<DataT>> => {
-    const { data, hubUrl, error } = await client<ApiPagedCollection<DataT>>(path, { params })
+  return async <DataT>(path: string, params?: ApiQueryParams): Promise<ApiFindResponse<DataT>> => {
+    const { data, hubUrl, error } = await api<ApiPagedCollection<DataT>>(path, { params })
 
     let view
     let items: DataT[] = []

@@ -1,5 +1,5 @@
-import type { ApiAssociativeArray } from '@kilip/api-client-core'
 import { useApiFind } from '@kilip/api-client-core'
+import type { ApiQueryParams } from '@kilip/api-client-core/src/api'
 import { makeListStore } from './list'
 
 export function defineResource<NameT> (
@@ -7,9 +7,9 @@ export function defineResource<NameT> (
   resourcePath?: string
 ) {
   const path = resourcePath || `/${resourceName}`
-  const useListStore = makeListStore<NameT>(resourceName)
+  const useListStore = makeListStore<NameT>(resourceName, path)
 
-  const find = async (params?: ApiAssociativeArray<string|number>): Promise<NameT[]> => {
+  const find = async (params?: ApiQueryParams): Promise<void> => {
     const store = useListStore()
     const api = useApiFind()
 
@@ -17,7 +17,6 @@ export function defineResource<NameT> (
     const resp = await api<NameT>(path, params)
     store.setData(resp)
     store.toggleLoading()
-    return resp.items
   }
 
   return {

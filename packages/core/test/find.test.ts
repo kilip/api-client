@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { useApiFind } from '../src'
-import { useFetchMockData } from '../../../test/mocks/setupTest'
 import type { User } from './types'
 
 describe('useApiFind', () => {
-  useFetchMockData()
-
   it('should find resource', async () => {
     const find = useApiFind()
 

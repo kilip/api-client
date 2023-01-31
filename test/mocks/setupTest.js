@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { beforeEach, afterEach } from 'vitest'
+import { beforeEach, afterEach, afterAll, beforeAll } from 'vitest'
 import { createApp, eventHandler, toNodeListener } from 'h3'
 import { listen } from 'listhen'
 import { useApiCore } from '../../packages/core/src/core'
@@ -31,25 +31,34 @@ const users = (event) => {
   return JSON.stringify(hydra)
 }
 
-export function useFetchMockData () {
+export function useSetupMockFetch () {
   beforeEach(async () => {
-    const app = createApp()
-      .use('/users', eventHandler(users))
-      .use('/users?username', eventHandler(users))
-      .use('/error/401', eventHandler((event) => {
-        event.node.res.setHeader('Content-Type', 'application/json')
-        event.node.res.statusCode = 401
-        event.node.res.statusText = 'An error occured'
-        return { code: 401, message: 'Invalid credentials.' }
-      }))
 
-    listener = await listen(toNodeListener(app))
   })
 
   afterEach(async () => {
     await listener.close
   })
 }
+
+const app = createApp()
+  .use('/users', eventHandler(users))
+  .use('/users?username', eventHandler(users))
+  .use('/error/401', eventHandler((event) => {
+    event.node.res.setHeader('Content-Type', 'application/json')
+    event.node.res.statusCode = 401
+    event.node.res.statusText = 'An error occured'
+    return { code: 401, message: 'Invalid credentials.' }
+  }))
+
+beforeAll(async () => {
+  listener = await listen(toNodeListener(app))
+})
+
+afterAll(async () => {
+  await listener.close
+})
+
 /*
 import { setupServer } from 'msw/node'
 import { handlers } from './handlers'

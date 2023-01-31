@@ -1,13 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { createPinia, setActivePinia } from 'pinia'
-import { createApp } from 'vue'
 import { defineResource } from '../src'
+import './setup'
 import type { User } from './types'
-
-const app = createApp({})
-const pinia = createPinia()
-app.use(pinia)
-setActivePinia(pinia)
 
 const useUserResource = defineResource<User>('user', '/users')
 
@@ -19,10 +13,8 @@ describe('useApiResource', () => {
 
     } = useUserResource
 
-    const items = await find()
+    await find()
     const store = useListStore()
-
-    expect(items).toBeDefined()
-    expect(store.items).toStrictEqual(items)
+    expect(store.items).toBeDefined()
   })
 })

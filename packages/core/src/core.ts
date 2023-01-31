@@ -1,11 +1,11 @@
 import { Hookable } from 'hookable'
-import type { ApiClientConfig } from './client'
+import type { ApiRequestConfig } from './api'
 
 export type ApiHookResult = Promise<void>
 
 export interface ApiHooks {
-  'client:pre-fetch': (params: ApiClientConfig) => ApiHookResult
-  'client:post-fetch': (params: ApiClientConfig) => ApiHookResult
+  'client:pre-fetch': (params: ApiRequestConfig) => ApiHookResult
+  'client:post-fetch': (params: ApiRequestConfig) => ApiHookResult
 }
 
 export interface ApiCoreOptions {

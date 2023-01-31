@@ -1,16 +1,17 @@
-import { $fetch, FetchError, FetchOptions } from 'ofetch'
+import type { FetchError, FetchOptions } from 'ofetch'
+import { $fetch } from 'ofetch'
+import { stringify } from 'qs'
 import { useApiCore } from './core'
 import { useApiEntrypoint } from './entrypoint'
-import { stringify } from 'qs'
+
+export interface ApiClientOptions extends FetchOptions {
+  params?: {[key: string]: any}
+}
 
 export interface ApiClientConfig {
   url: string
   baseURL: string
   fetchOptions: ApiClientOptions
-}
-
-export interface ApiClientOptions extends FetchOptions {
-  params?: {[key: string]: any}
 }
 
 export interface ApiClientReponse<DataT> {
@@ -20,19 +21,19 @@ export interface ApiClientReponse<DataT> {
 }
 
 export const extractHubURL = (response: Response): undefined | URL => {
-  if(!response.headers){
+  if (!response) {
     return
   }
 
-  const linkHeader = response.headers.get("Link");
-  if (!linkHeader) return undefined;
+  const linkHeader = response.headers.get('Link')
+  if (!linkHeader) { return undefined }
 
   const matches = linkHeader.match(
     /<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/
-  );
+  )
 
-  return matches && matches[1] ? new URL(matches[1], useApiEntrypoint()) : undefined;
-};
+  return matches && matches[1] ? new URL(matches[1], useApiEntrypoint()) : undefined
+}
 
 export const useApiClient = () => {
   const core = useApiCore()
@@ -41,15 +42,14 @@ export const useApiClient = () => {
 
   return async <DataT>(
     url: string,
-    fetchOptions: ApiClientOptions = {},
+    fetchOptions: ApiClientOptions = {}
   ): Promise<ApiClientReponse<DataT>> => {
-
     const headers: HeadersInit = {}
 
-    headers.Accept =  defaultMimeType
+    headers.Accept = defaultMimeType
 
-    if(fetchOptions?.params){
-      const params = stringify(fetchOptions.params, { encodeValuesOnly: true  })
+    if (fetchOptions?.params) {
+      const params = stringify(fetchOptions.params, { encodeValuesOnly: true })
       url = `${url}?${params}`
       delete fetchOptions.params
     }
@@ -76,17 +76,18 @@ export const useApiClient = () => {
     await core.callHook('client:pre-fetch', fetchConfig)
 
     let error
-    let data: DataT|undefined = undefined
+    let data: DataT|undefined
+    let hubUrl
 
     const response = await $fetch.raw(url, fetchConfig.fetchOptions)
-      .catch(e => error = e)
-    const hubUrl: URL|undefined = extractHubURL(response)
+      .catch((e) => { error = e })
 
-    if(response.ok){
+    if (response) {
       data = response._data
+      hubUrl = extractHubURL(response)
     }
 
-    await core.callHook('client:post-fetch', { config: fetchConfig, response})
+    await core.callHook('client:post-fetch', fetchConfig)
 
     return {
       data,

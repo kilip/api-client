@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
-import { defineResource } from "../../src";
-import { User } from "../types";
-import { createPinia, setActivePinia } from "pinia";
-import { createApp } from "vue";
+import { describe, expect, it } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+import { createApp } from 'vue'
+import { defineResource } from '../src'
+import type { User } from './types'
 
 const app = createApp({})
 const pinia = createPinia()
@@ -12,12 +12,10 @@ setActivePinia(pinia)
 const useUserResource = defineResource<User>('user', '/users')
 
 describe('useApiResource', () => {
-
   it('find() should returns items when exists', async () => {
-
     const {
       find,
-      useListStore,
+      useListStore
 
     } = useUserResource
 
@@ -26,6 +24,5 @@ describe('useApiResource', () => {
 
     expect(items).toBeDefined()
     expect(store.items).toStrictEqual(items)
-
   })
 })

@@ -1,6 +1,6 @@
-import { ApiPagedListView, ApiFindResponse } from '@kilip/api-client-core'
+import type { ApiPagedListView, ApiFindResponse } from '@kilip/api-client-core'
 import { defineStore } from 'pinia'
-import { FetchError} from 'ofetch'
+import type { FetchError } from 'ofetch'
 
 export interface ApiListState<ResourceT> {
   items: ResourceT[]
@@ -11,7 +11,7 @@ export interface ApiListState<ResourceT> {
   loading: boolean
 }
 
-export function makeListStore<ResourceT>(resourceName: string) {
+export function makeListStore<ResourceT> (resourceName: string) {
   return defineStore(`${resourceName}.list`, {
     state: (): ApiListState<ResourceT> => ({
       items: [],
@@ -23,18 +23,21 @@ export function makeListStore<ResourceT>(resourceName: string) {
     }),
     getters: {},
     actions: {
-      toggleLoading(){
+      toggleLoading () {
         this.loading = !this.loading
       },
-      setData({ items, hubUrl, error, totalItems, view}: ApiFindResponse<ResourceT>){
+      setData ({ items, hubUrl, error, totalItems, view }: ApiFindResponse<ResourceT>) {
         this.$patch({
           items
         })
         this.error = error
         this.view = view
-        this.totalItems = totalItems ? totalItems:0
+        this.totalItems = totalItems || 0
         this.hubUrl = hubUrl
+      },
+      setError (error?: FetchError) {
+        this.error = error
       }
-    },
+    }
   })
 }

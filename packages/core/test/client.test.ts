@@ -1,24 +1,24 @@
-import { describe, expect, it } from "vitest";
-import { ApiClientConfig, ApiClientReponse, ApiPagedCollection, useApiClient, useApiCore }
-from "../../src";
-import { User } from "../types";
-import { useFetchMockData } from "../../../../test/mocks/setupTest";
-
-
+import { describe, expect, it } from 'vitest'
+import type { ApiClientConfig, ApiClientReponse, ApiPagedCollection } from '../src'
+import { useApiClient, useApiCore } from '../src'
+import { useFetchMockData } from '../../../test/mocks/setupTest'
+import type { User } from './types'
 
 describe('useApiClient', () => {
   useFetchMockData()
 
-  it('should fetch successfully', async() => {
+  it('should fetch successfully', async () => {
     const core = useApiCore()
     const client = useApiClient()
-    const preFetch = async (data: ApiClientConfig) => {
+    // eslint-disable-next-line require-await
+    const preFetch = async (data: ApiClientConfig): Promise<void> => {
       expect(data.url).toBe('/users?sort[name]=asc')
+      return Promise.resolve()
     }
     core.hookOnce('client:pre-fetch', preFetch)
 
     const params = {
-       sort: {name: 'asc'}
+      sort: { name: 'asc' }
     }
 
     const { data, hubUrl, error } = await client<ApiClientReponse<User[]>>('/users', { params })
@@ -29,7 +29,6 @@ describe('useApiClient', () => {
   })
 
   it('should handle 401 error', async () => {
-
     const client = useApiClient()
     const { data, hubUrl, error } = await client<ApiPagedCollection<User>>('/error/401')
 
@@ -41,6 +40,5 @@ describe('useApiClient', () => {
       code: 401,
       message: 'Invalid credentials.'
     })
-
   })
 })

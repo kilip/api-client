@@ -1,9 +1,8 @@
-import { describe, expect, it } from "vitest"
-import { useApiCore } from "../../src"
-import { useFetchMockData } from "../../../../test/mocks/setupTest"
+import { describe, expect, it } from 'vitest'
+import { useApiCore } from '../src'
+import { useFetchMockData } from '../../../test/mocks/setupTest'
 
 describe('useApiCore', () => {
-
   useFetchMockData()
 
   it('useApiCore() returns a static ApiCore instance', () => {

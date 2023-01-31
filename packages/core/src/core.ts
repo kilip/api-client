@@ -1,14 +1,11 @@
 import { Hookable } from 'hookable'
-import { ApiClientConfig } from "./client"
+import type { ApiClientConfig } from './client'
 
 export type ApiHookResult = Promise<void>
 
 export interface ApiHooks {
   'client:pre-fetch': (params: ApiClientConfig) => ApiHookResult
-  'client:post-fetch': (params: {
-    config: ApiClientConfig,
-    response: Response
-  }) => ApiHookResult
+  'client:post-fetch': (params: ApiClientConfig) => ApiHookResult
 }
 
 export interface ApiCoreOptions {
@@ -21,10 +18,11 @@ export interface ApiCoreOptions {
 export type OptionKeys = keyof ApiCoreOptions & string
 
 export class ApiCore extends Hookable<ApiHooks> {
+  // eslint-disable-next-line no-use-before-define
   private static instance: ApiCore
   options: ApiCoreOptions
 
-  private constructor(){
+  private constructor () {
     super()
     this.options = {
       entrypoint: 'https://localhost',
@@ -34,8 +32,8 @@ export class ApiCore extends Hookable<ApiHooks> {
     }
   }
 
-  static getInstance(): ApiCore {
-    if(!ApiCore.instance){
+  static getInstance (): ApiCore {
+    if (!ApiCore.instance) {
       ApiCore.instance = new this()
     }
     return ApiCore.instance

@@ -1,13 +1,13 @@
-import { FetchError } from "ofetch";
-import { ApiAssociativeArray } from "./types"
-import { useApiClient } from "./client"
+import type { FetchError } from 'ofetch'
+import type { ApiAssociativeArray } from './types'
+import { useApiClient } from './client'
 
 export interface ApiPagedListView {
-  "@id": string;
-  "hydra:first": string;
-  "hydra:last": string;
-  "hydra:next": string;
-  "hydra:previous": string;
+  '@id': string;
+  'hydra:first': string;
+  'hydra:last': string;
+  'hydra:next': string;
+  'hydra:previous': string;
 }
 
 export interface ApiPagedCollection<DataT> {
@@ -35,14 +35,14 @@ export interface ApiQueryParams {
 export const useApiFind = () => {
   const client = useApiClient()
 
-  return async <DataT>(path: string, params?: ApiAssociativeArray<string|number|undefined> ): Promise<ApiFindResponse<DataT>> => {
+  return async <DataT>(path: string, params?: ApiAssociativeArray<string|number|undefined>): Promise<ApiFindResponse<DataT>> => {
     const { data, hubUrl, error } = await client<ApiPagedCollection<DataT>>(path, { params })
 
     let view
     let items: DataT[] = []
-    let totalItems:number|undefined = undefined
+    let totalItems:number|undefined
 
-    if(data){
+    if (data) {
       view = data['hydra:view']
       items = data['hydra:member']
       totalItems = data['hydra:totalItems']
@@ -54,12 +54,5 @@ export const useApiFind = () => {
       view,
       totalItems
     }
-  }
-}
-
-export const useApiFindItem = () => {
-  // const client = useApiClient()
-  return async <DataT>(path: string, params?: ApiAssociativeArray<string|number>) => {
-
   }
 }

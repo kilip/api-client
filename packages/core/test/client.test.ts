@@ -39,7 +39,7 @@ describe('useApiClient', () => {
     })
   })
 
-  it('should handle violations data', async() => {
+  it('should handle violations data', async () => {
     const client = useApiClient()
     const { data, hubUrl, error } = await client<ApiPagedCollection<User>>('/users/violations')
 

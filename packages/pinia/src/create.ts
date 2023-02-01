@@ -1,4 +1,4 @@
-import type { ApiResponseError, ApiSubmissionErrors } from '@kilip/api-client-core'
+import type { ApiResponseError } from '@kilip/api-client-core'
 import { useApi } from '@kilip/api-client-core'
 import { defineStore } from 'pinia'
 

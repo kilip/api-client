@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { afterAll, beforeAll, beforeEach, afterEach } from 'vitest'
+import { afterAll, beforeAll } from 'vitest'
+import type { H3Event } from 'h3'
 import { createApp, eventHandler, toNodeListener } from 'h3'
 import type { Listener } from 'listhen'
 import { listen } from 'listhen'
@@ -8,10 +9,10 @@ import { useApiCore } from '../../packages/core/src/core'
 
 const getUsers = () => {
   const json = readFileSync(path.join(__dirname, '/fixtures/users.json'))
-  return JSON.parse(json)
+  return JSON.parse(json.toString())
 }
 
-const users = (event) => {
+const users = (event: { node: { res: { setHeader: (arg0: string, arg1: string) => void } } }) => {
   event.node.res.setHeader('Content-Type', 'application/ld+json')
   event.node.res.setHeader('link', '<http://localhost:3000/.well-known/mercure>; rel="mercure"')
   const data = getUsers()
@@ -33,13 +34,13 @@ const users = (event) => {
   return JSON.stringify(hydra)
 }
 
-const setHeader = (event) => {
+const setHeader = (event: H3Event) => {
   event.node.res.setHeader('Content-Type', 'application/ld+json')
   event.node.res.setHeader('link', '<http://localhost:3000/.well-known/mercure>; rel="mercure"')
 }
 
 // returns a single user
-const user = (event) => {
+const user = (event: any) => {
   setHeader(event)
   const data = getUsers()
   return data[5]

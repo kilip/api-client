@@ -51,11 +51,13 @@ describe('makeUpdateStore', () => {
 
   it('violations() returns value from errors.violations', () => {
     const store = useUpdateStore()
-    const violations: ApiSubmissionErrors = { some: {
-      propertyPath: 'any',
-      code: 'any',
-      message: 'any'
-    }}
+    const violations: ApiSubmissionErrors = {
+      some: {
+        propertyPath: 'any',
+        code: 'any',
+        message: 'any'
+      }
+    }
     const error = { violations }
 
     store.$patch({ error })

@@ -3,7 +3,7 @@ import { $fetch } from 'ofetch'
 import { stringify } from 'qs'
 import { useApiCore } from './core'
 import { useApiEntrypoint } from './entrypoint'
-import type { ApiFetchOptions, ApiResponse, ApiResponseError, ApiSubmissionErrors } from './types'
+import type { ApiFetchOptions, ApiResponse, ApiResponseError, ApiSubmissionErrors, ApiViolation } from './types'
 
 class _ApiResponseError<T> extends Error implements ApiResponseError<T> {
   request?: FetchRequest
@@ -29,7 +29,18 @@ class _ApiResponseError<T> extends Error implements ApiResponseError<T> {
     this.statusCode = statusCode
     this.statusMessage = statusMessage
     this.statusText = statusText
-    // @TODO: permorm violations error process here
+    this.violations = {}
+
+    if (data?.violations) {
+      this.parseViolations(data?.violations)
+    }
+  }
+
+  private parseViolations (violations: ApiViolation[]) {
+    this.violations = {}
+    for (const val of violations) {
+      this.violations[val.propertyPath] = val
+    }
   }
 }
 

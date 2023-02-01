@@ -13,7 +13,7 @@ export default defineConfig({
   },
   test: {
     setupFiles: [
-      '/test/mocks/setupTest.js'
+      '/test/mocks/setupTest.ts'
     ]
   }
 })

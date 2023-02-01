@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import './setup'
+import type { ApiSubmissionErrors } from '@kilip/api-client-core'
 import { defineResource } from '../src/resource'
 import type { User } from './types'
 
@@ -46,5 +47,20 @@ describe('makeUpdateStore', () => {
     expect(store.hubUrl).toBeDefined()
 
     expect(store.updated?.name).toBe('Mrs. Dennis Schulist')
+  })
+
+  it('violations() returns value from errors.violations', () => {
+    const store = useUpdateStore()
+    const violations: ApiSubmissionErrors = { some: {
+      propertyPath: 'any',
+      code: 'any',
+      message: 'any'
+    }}
+    const error = { violations }
+
+    store.$patch({ error })
+
+    expect(store.violations).toBeDefined()
+    expect(store.violations).toStrictEqual(violations)
   })
 })

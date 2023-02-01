@@ -1,7 +1,7 @@
 import type { FetchOptions, FetchRequest, FetchResponse, SearchParameters } from 'ofetch'
 
 export interface ApiSubmissionErrors {
-  [key: string]: string
+  [key: string]: ApiViolation
 }
 
 export interface ApiResponseError<T> {
@@ -82,4 +82,10 @@ export interface ApiCreateResponse<DataT> {
   created?: DataT
   error?: ApiResponseError<DataT>
   hubUrl?: URL
+}
+
+export interface ApiViolation {
+  propertyPath: string
+  message: string,
+  code: string
 }

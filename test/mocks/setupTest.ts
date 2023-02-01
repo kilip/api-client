@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { afterAll, beforeAll } from 'vitest'
+import { afterAll, beforeAll, beforeEach, afterEach } from 'vitest'
 import { createApp, eventHandler, toNodeListener } from 'h3'
+import type { Listener } from 'listhen'
 import { listen } from 'listhen'
 import { useApiCore } from '../../packages/core/src/core'
 
@@ -45,23 +46,30 @@ const user = (event) => {
 }
 
 const app = createApp()
+  .use('/users/violations', eventHandler((event) => {
+    event.node.res.setHeader('Content-Type', 'application/json')
+    event.node.res.statusCode = 422
+    const json = readFileSync(path.join(__dirname, '/fixtures/violations.json'))
+    const data = JSON.parse(json.toString())
+    return data
+  }))
   .use('/users/delete', eventHandler((event) => {
     event.node.res.setHeader('Content-Type', 'application/json')
     event.node.res.statusCode = 201
-    event.node.res.statusText = 'User resource deleted'
+    event.node.res.statusMessage = 'User resource deleted'
     return { code: 201, message: 'User resource deleted' }
   }))
   .use('/users/create', eventHandler((event) => {
     setHeader(event)
     event.node.res.statusCode = 201
-    event.node.res.statusText = 'User resource created'
+    event.node.res.statusMessage = 'User resource created'
     const data = getUsers()
     return data[1]
   }))
   .use('/users/update', eventHandler((event) => {
     setHeader(event)
     event.node.res.statusCode = 200
-    event.node.res.statusText = 'User resource updated'
+    event.node.res.statusMessage = 'User resource updated'
     const data = getUsers()
     return data[1]
   }))
@@ -71,16 +79,16 @@ const app = createApp()
   .use('/error/401', eventHandler((event) => {
     event.node.res.setHeader('Content-Type', 'application/json')
     event.node.res.statusCode = 401
-    event.node.res.statusText = 'An error occured'
+    event.node.res.statusMessage = 'An error occured'
     return { code: 401, message: 'Invalid credentials.' }
   }))
 
-let listener
+let listener: Listener
 useApiCore().options.entrypoint = 'http://localhost:3000'
 
 beforeAll(async () => {
   listener = await listen(toNodeListener(app), {
-    isTest: true
+
   })
 })
 

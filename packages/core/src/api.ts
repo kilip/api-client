@@ -1,103 +1,87 @@
-import type { FetchError, FetchOptions, SearchParameters } from 'ofetch'
-import { $fetch } from 'ofetch'
-import { stringify } from 'qs'
-import { useApiCore } from './core'
-import { useApiEntrypoint } from './entrypoint'
-
-export interface ApiQueryParams extends SearchParameters {
-}
-
-export interface ApiFetchOptions extends FetchOptions {
-}
-
-export interface ApiRequestConfig {
-  url: string
-  baseURL: string
-  fetchOptions: ApiFetchOptions
-}
-
-export interface ApiResponse<DataT> {
-  data: DataT | undefined
-  error: FetchError | undefined
-  hubUrl: URL | undefined
-}
-
-export const extractHubURL = (response: Response): undefined | URL => {
-  if (!response) {
-    return
-  }
-
-  const linkHeader = response.headers.get('Link')
-  if (!linkHeader) { return undefined }
-
-  const matches = linkHeader.match(
-    /<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/
-  )
-
-  return matches && matches[1] ? new URL(matches[1], useApiEntrypoint()) : undefined
-}
+import type {
+  ApiResponseError,
+  ApiFindResponse,
+  ApiPagedCollection,
+  ApiPagedListView,
+  ApiFindOneResponse,
+  ApiQueryParams
+} from './types'
+import { useApiClient } from './client'
 
 export const useApi = () => {
-  const core = useApiCore()
-  const { defaultMimeType } = core.options
-  const baseURL = useApiEntrypoint()
+  const client = useApiClient()
 
-  return async <DataT>(
-    url: string,
-    fetchOptions: ApiFetchOptions = {}
-  ): Promise<ApiResponse<DataT>> => {
-    const headers: HeadersInit = {}
-
-    headers.Accept = defaultMimeType
-    headers.mode = 'cors'
-
-    if (fetchOptions?.params) {
-      const params = stringify(fetchOptions.params, { encodeValuesOnly: true })
-      url = `${url}?${params}`
-      delete fetchOptions.params
-    }
-
-    const defaults = {
-      parseResponse: JSON.parse
-    }
-
-    fetchOptions = {
-      retry: 0,
-      baseURL,
-      ...defaults,
-      ...fetchOptions,
-      headers: {
-        ...headers,
-        ...fetchOptions.headers
-      }
-    }
-    const fetchConfig = {
-      url,
-      baseURL,
-      fetchOptions
-    }
-    await core.callHook('client:pre-fetch', fetchConfig)
-
-    let error
-    let data: DataT|undefined
-    let hubUrl
-
-    const response = await $fetch.raw(url, fetchConfig.fetchOptions)
-      .catch((e) => {
-        error = e
+  const find = <T>(path: string, params?: ApiQueryParams): Promise<ApiFindResponse<T>> => {
+    let view: ApiPagedListView|undefined
+    let items: T[] = []
+    let totalItems: number | undefined
+    return client<ApiPagedCollection<T>>(path, { params })
+      .then(({ data, hubUrl, error }) => {
+        if (data) {
+          view = data['hydra:view']
+          items = data['hydra:member']
+          totalItems = data['hydra:totalItems']
+        }
+        return {
+          items,
+          hubUrl,
+          error: error as ApiResponseError<T>,
+          view,
+          totalItems
+        }
       })
+  }
 
-    if (response) {
-      data = response._data
-      hubUrl = extractHubURL(response)
+  const findOne = <T>(url: string, params?: ApiQueryParams): Promise<ApiFindOneResponse<T>> => {
+    return client<T>(url, { params })
+      .then(({ data, hubUrl, error }) => {
+        return {
+          item: data,
+          hubUrl,
+          error
+        }
+      })
+  }
+
+  const create = <T>(path: string, payload: T) => {
+    const options = {
+      method: 'POST',
+      payload
     }
+    return client<T>(path, options)
+      .then(({ data, hubUrl, error }) => {
+        return {
+          created: data,
+          hubUrl,
+          error
+        }
+      })
+  }
 
-    await core.callHook('client:post-fetch', fetchConfig)
-
-    return {
-      data,
-      error,
-      hubUrl
+  const update = <T extends BodyInit | Record<string, any> | null | undefined>(path: string, payload: T) => {
+    const options = {
+      method: 'PUT',
+      body: payload
     }
+    return client<T>(path, options)
+      .then(({ data, hubUrl, error }) => {
+        return {
+          updated: data,
+          hubUrl,
+          error
+        }
+      })
+  }
+
+  const remove = <T>(path: string) => {
+    return client<T>(path, { method: 'DELETE' })
+  }
+
+  return {
+    find,
+    findOne,
+    create,
+    update,
+    remove
   }
 }

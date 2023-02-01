@@ -1,26 +1,23 @@
-import { useApiFind } from '@kilip/api-client-core'
-import type { ApiQueryParams } from '@kilip/api-client-core/src/api'
+import type { ApiHydraItem } from '@kilip/api-client-core'
+import { makeCreateStore } from './create'
 import { makeListStore } from './list'
+import { makeUpdateStore } from './update'
+import { makeRemoveStore } from './remove'
+import { makeShowStore } from './show'
 
-export function defineResource<NameT> (
-  resourceName: string,
-  resourcePath?: string
-) {
+export const defineResource = <NameT extends ApiHydraItem>(resourceName: string, resourcePath?: string) => {
   const path = resourcePath || `/${resourceName}`
   const useListStore = makeListStore<NameT>(resourceName, path)
-
-  const find = async (params?: ApiQueryParams): Promise<void> => {
-    const store = useListStore()
-    const api = useApiFind()
-
-    store.toggleLoading()
-    const resp = await api<NameT>(path, params)
-    store.setData(resp)
-    store.toggleLoading()
-  }
+  const useShowStore = makeShowStore<NameT>(resourceName)
+  const useCreateStore = makeCreateStore<NameT>(resourceName, path)
+  const useUpdateStore = makeUpdateStore<NameT>(resourceName, path)
+  const useRemoveStore = makeRemoveStore<NameT>(resourceName)
 
   return {
-    find,
-    useListStore
+    useListStore,
+    useShowStore,
+    useCreateStore,
+    useUpdateStore,
+    useRemoveStore
   }
 }

@@ -7,14 +7,9 @@ const useUserResource = defineResource<User>('user', '/users')
 
 describe('useApiResource', () => {
   it('find() should returns items when exists', async () => {
-    const {
-      find,
-      useListStore
-
-    } = useUserResource
-
-    await find()
+    const { useListStore } = useUserResource
     const store = useListStore()
+    await store.loadItems()
     expect(store.items).toBeDefined()
   })
 })

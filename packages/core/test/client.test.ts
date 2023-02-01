@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import type { ApiRequestConfig, ApiResponse, ApiPagedCollection } from '../src'
-import { useApi, useApiCore } from '../src'
+import { useApiClient, useApiCore } from '../src'
 import type { User } from './types'
 
 describe('useApiClient', () => {
   it('should fetch successfully', async () => {
     const core = useApiCore()
-    const client = useApi()
+    const api = useApiClient()
     // eslint-disable-next-line require-await
     const preFetch = async (data: ApiRequestConfig): Promise<void> => {
       expect(data.url).toBe('/users?sort[name]=asc')
@@ -18,7 +18,7 @@ describe('useApiClient', () => {
       sort: { name: 'asc' }
     }
 
-    const { data, hubUrl, error } = await client<ApiResponse<User[]>>('/users', { params })
+    const { data, hubUrl, error } = await api<ApiResponse<User[]>>('/users', { params })
 
     expect(data).toBeDefined()
     expect(hubUrl).toBeDefined()
@@ -26,8 +26,8 @@ describe('useApiClient', () => {
   })
 
   it('should handle 401 error', async () => {
-    const client = useApi()
-    const { data, hubUrl, error } = await client<ApiPagedCollection<User>>('/error/401')
+    const api = useApiClient()
+    const { data, hubUrl, error } = await api<ApiPagedCollection<User>>('/error/401')
 
     expect(data).toBeUndefined()
     expect(hubUrl).toBeUndefined()

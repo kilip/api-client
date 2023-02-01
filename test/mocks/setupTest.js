@@ -1,25 +1,26 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { beforeEach, afterEach, afterAll, beforeAll } from 'vitest'
+import { afterAll, beforeAll } from 'vitest'
 import { createApp, eventHandler, toNodeListener } from 'h3'
 import { listen } from 'listhen'
 import { useApiCore } from '../../packages/core/src/core'
 
-let listener
-useApiCore().options.entrypoint = 'http://localhost:3000'
+const getUsers = () => {
+  const json = readFileSync(path.join(__dirname, '/fixtures/users.json'))
+  return JSON.parse(json)
+}
 
 const users = (event) => {
   event.node.res.setHeader('Content-Type', 'application/ld+json')
   event.node.res.setHeader('link', '<http://localhost:3000/.well-known/mercure>; rel="mercure"')
-  const json = readFileSync(path.join(__dirname, '/fixtures/users.json'))
-  const parsed = JSON.parse(json)
+  const data = getUsers()
 
   const hydra = {
     '@context': '/context/User',
     '@id': 'https://localhost:3000/users',
     '@type': 'User',
-    'hydra:member': parsed,
-    'hydra:totalItems': parsed.length,
+    'hydra:member': data,
+    'hydra:totalItems': data.length,
     'hydra:view': {
       '@id': 'https://localhost:3000/users?page=2',
       'hydra:first': 'https://localhost:3000/users?page=1',
@@ -31,17 +32,40 @@ const users = (event) => {
   return JSON.stringify(hydra)
 }
 
-export function useSetupMockFetch () {
-  beforeEach(async () => {
+const setHeader = (event) => {
+  event.node.res.setHeader('Content-Type', 'application/ld+json')
+  event.node.res.setHeader('link', '<http://localhost:3000/.well-known/mercure>; rel="mercure"')
+}
 
-  })
-
-  afterEach(async () => {
-    await listener.close
-  })
+// returns a single user
+const user = (event) => {
+  setHeader(event)
+  const data = getUsers()
+  return data[5]
 }
 
 const app = createApp()
+  .use('/users/delete', eventHandler((event) => {
+    event.node.res.setHeader('Content-Type', 'application/json')
+    event.node.res.statusCode = 201
+    event.node.res.statusText = 'User resource deleted'
+    return { code: 201, message: 'User resource deleted' }
+  }))
+  .use('/users/create', eventHandler((event) => {
+    setHeader(event)
+    event.node.res.statusCode = 201
+    event.node.res.statusText = 'User resource created'
+    const data = getUsers()
+    return data[1]
+  }))
+  .use('/users/update', eventHandler((event) => {
+    setHeader(event)
+    event.node.res.statusCode = 200
+    event.node.res.statusText = 'User resource updated'
+    const data = getUsers()
+    return data[1]
+  }))
+  .use('/users/5', eventHandler(user))
   .use('/users', eventHandler(users))
   .use('/users?username', eventHandler(users))
   .use('/error/401', eventHandler((event) => {
@@ -51,25 +75,15 @@ const app = createApp()
     return { code: 401, message: 'Invalid credentials.' }
   }))
 
+let listener
+useApiCore().options.entrypoint = 'http://localhost:3000'
+
 beforeAll(async () => {
-  listener = await listen(toNodeListener(app))
+  listener = await listen(toNodeListener(app), {
+    isTest: true
+  })
 })
 
 afterAll(async () => {
-  await listener.close
+  await listener.close()
 })
-
-/*
-import { setupServer } from 'msw/node'
-import { handlers } from './handlers'
-import { afterAll, beforeAll, afterEach } from 'vitest'
-import { useApiCore } from '../../packages/core/src/composables'
-
-useApiCore().options.entrypoint = 'http://localhost:3000'
-const server = setupServer(...handlers)
-
-console.log(server)
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
-*/

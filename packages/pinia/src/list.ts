@@ -1,14 +1,13 @@
-import type { ApiPagedListView, ApiFindResponse, ApiQueryParams, ApiPagedCollection } from '@kilip/api-client-core'
-import { defineStore } from 'pinia'
-import type { FetchError } from 'ofetch'
 import { useApi } from '@kilip/api-client-core'
+import type { ApiPagedListView, ApiFindResponse, ApiQueryParams, ApiResponseError } from '@kilip/api-client-core'
+import { defineStore } from 'pinia'
 
 export interface ApiListState<ResourceT> {
-  items: ResourceT[]
-  hubUrl: URL|undefined
-  error: FetchError|undefined
-  totalItems: number
-  view: ApiPagedListView|undefined
+  items?: ResourceT[]
+  hubUrl?: URL|undefined
+  error?: ApiResponseError<ResourceT>
+  totalItems?: number
+  view?: ApiPagedListView
   loading: boolean
 }
 
@@ -27,41 +26,38 @@ export function makeListStore<ResourceT> (
     }),
     getters: {},
     actions: {
-      toggleLoading () {
-        this.loading = !this.loading
-      },
       setData ({ items, hubUrl, error, totalItems, view }: ApiFindResponse<ResourceT>) {
-        this.$patch({
-          items
-        })
-        this.error = error
-        this.view = view
-        this.totalItems = totalItems || 0
-        this.hubUrl = hubUrl
+        this.setItems(items as ResourceT[])
+        this.setHubUrl(hubUrl)
+        this.setError(error)
+        this.setTotalItems(totalItems)
+        this.setView(view)
       },
       setTotalItems (totalItems?: number) {
         this.totalItems = totalItems || 0
       },
-      setError (error?: FetchError) {
-        this.error = error
+      setError (error?: ApiResponseError<ResourceT>) {
+        this.$patch({ error })
       },
-      setItems (items: ResourceT[]) {
+      setItems (items?: ResourceT[]) {
         this.$patch({ items })
       },
       setView (view?: ApiPagedListView) {
         this.view = view
       },
-      async loadItems (params?: ApiQueryParams) {
-        const api = useApi()
-        const { data, error, hubUrl } = await api<ApiPagedCollection<ResourceT>>(resourcePath, { params })
-
-        if (data) {
-          this.setView(data['hydra:view'])
-          this.setTotalItems(data['hydra:totalItems'])
-          this.setItems(data['hydra:member'])
-        }
+      setHubUrl (hubUrl?: URL) {
         this.hubUrl = hubUrl
-        this.error = error
+      },
+      toggleLoading () {
+        this.loading = !this.loading
+      },
+
+      async loadItems (params?: ApiQueryParams) {
+        this.toggleLoading()
+        const { find } = useApi()
+        const data = await find<ResourceT>(resourcePath, { params })
+        this.setData(data)
+        this.toggleLoading()
       }
     }
   })

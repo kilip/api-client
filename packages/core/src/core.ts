@@ -1,5 +1,5 @@
 import { Hookable } from 'hookable'
-import type { ApiRequestConfig } from './api'
+import type { ApiRequestConfig } from './types'
 
 export type ApiHookResult = Promise<void>
 
@@ -9,10 +9,10 @@ export interface ApiHooks {
 }
 
 export interface ApiCoreOptions {
-  entrypoint: string
-  prefix: string
-  defaultMimeType: string
-  token: string | Function | undefined
+  entrypoint?: string
+  prefix?: string
+  defaultMimeType?: string
+  token?: string | Function | undefined
 }
 
 export type OptionKeys = keyof ApiCoreOptions & string
@@ -37,6 +37,13 @@ export class ApiCore extends Hookable<ApiHooks> {
       ApiCore.instance = new this()
     }
     return ApiCore.instance
+  }
+
+  setOptions (options: ApiCoreOptions) {
+    this.options = {
+      ...this.options,
+      ...options
+    }
   }
 }
 

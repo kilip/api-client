@@ -1,6 +1,6 @@
 {
   "name": "@doyolabs/api-client-pinia",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Api Platform client pinia integration",
   "license": "MIT",
   "sideEffects": false,

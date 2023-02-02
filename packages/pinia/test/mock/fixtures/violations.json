@@ -1,0 +1,18 @@
+{
+  "@context": "/contexts/ConstraintViolationList",
+  "@type": "ConstraintViolationList",
+  "hydra:title": "An error occurred",
+  "hydra:description": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.",
+  "violations": [
+    {
+      "propertyPath": "isbn",
+      "message": "This value is neither a valid ISBN-10 nor a valid ISBN-13.",
+      "code": "23d21cea-da99-453d-98b1-a7d916fbb339"
+    },
+    {
+      "propertyPath": "other",
+      "message": "This value is neither a valid ISBN-10 nor a valid ISBN-13.",
+      "code": "23d21cea-da99-453d-98b1-a7d916fbb339"
+    }
+  ]
+}

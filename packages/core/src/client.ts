@@ -60,14 +60,13 @@ export const extractHubURL = (response: Response): undefined | URL => {
 }
 
 export const useApiClient = () => {
-  const core = useApiCore()
-  const { defaultMimeType } = core.options
-  const baseURL = useApiEntrypoint()
-
   return async <DataT>(
     url: string,
     fetchOptions: ApiFetchOptions = {}
   ): Promise<ApiResponse<DataT>> => {
+    const core = useApiCore()
+    const { defaultMimeType } = core.options
+    const baseURL = useApiEntrypoint()
     const headers: HeadersInit = {}
 
     if (defaultMimeType) {
@@ -82,7 +81,7 @@ export const useApiClient = () => {
     }
 
     if (fetchOptions?.params) {
-      const params = stringify(fetchOptions.params, { encodeValuesOnly: true})
+      const params = stringify(fetchOptions.params, { encodeValuesOnly: true })
       url = `${url}?${params}`
       delete fetchOptions.params
     }

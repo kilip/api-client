@@ -1,5 +1,6 @@
 {
   "name": "@doyolabs/api-client-nuxt",
+  "version": "0.0.3",
   "description": "Api Platform client module for Nuxt",
   "license": "MIT",
   "type": "module",

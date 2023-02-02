@@ -1,11 +1,26 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, afterEach, beforeEach } from 'vitest'
+import type { Listener } from 'listhen'
+import { useApiCore } from '@doyolabs/api-client-core'
 import { makeCreateStore } from '../src/create'
+import { mockHttpEnd, mockHttpStart } from '../../../test'
 import type { User } from './types'
 import './setup'
+import { app } from './mock/h3'
 
-const useStore = makeCreateStore<User>('user', 'users')
+const useStore = makeCreateStore<User>('user', '/users')
 
 describe('makeCreateStore', () => {
+  let listener: Listener
+
+  beforeEach(async () => {
+    listener = await mockHttpStart(app)
+    useApiCore().options.entrypoint = listener.url
+  })
+
+  afterEach(async () => {
+    await mockHttpEnd(listener)
+  })
+
   it('should initialize default state values', () => {
     const store = useStore()
 
@@ -18,7 +33,6 @@ describe('makeCreateStore', () => {
 
   it('create() action', async () => {
     const store = useStore()
-
     await store.create({
       '@id': '/users/create',
       '@context': '/context/User',

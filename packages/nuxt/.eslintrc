@@ -1,5 +1,4 @@
 {
   "root": true,
-  "extends": ["@nuxt/eslint-config"],
-  "failOnWarn": false
+  "extends": ["@nuxt/eslint-config"]
 }

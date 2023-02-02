@@ -1,9 +1,22 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, afterEach, beforeEach } from 'vitest'
+import type { Listener } from 'listhen'
 import type { ApiRequestConfig, ApiResponse, ApiPagedCollection } from '../src'
 import { useApiClient, useApiCore } from '../src'
+import { mockHttpEnd, mockHttpStart } from '../../../test'
 import type { User } from './types'
+import { app } from './mock/h3'
 
 describe('useApiClient', () => {
+  let listener: Listener
+
+  beforeEach(async () => {
+    listener = await mockHttpStart(app)
+  })
+
+  afterEach(async () => {
+    await mockHttpEnd(listener)
+  })
+
   it('should fetch successfully', async () => {
     const core = useApiCore()
     const client = useApiClient()
@@ -13,7 +26,6 @@ describe('useApiClient', () => {
       return Promise.resolve()
     }
     core.hookOnce('client:pre-fetch', preFetch)
-
     const params = {
       sort: { name: 'asc' }
     }

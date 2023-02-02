@@ -46,7 +46,7 @@ export const useApi = () => {
   const create = <T>(path: string, payload: T) => {
     const options = {
       method: 'POST',
-      payload
+      body: JSON.stringify(payload)
     }
     return client<T>(path, options)
       .then(({ data, hubUrl, error }) => {

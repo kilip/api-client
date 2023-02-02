@@ -55,7 +55,7 @@ export function makeListStore<ResourceT> (
       async loadItems (params?: ApiQueryParams) {
         this.toggleLoading()
         const { find } = useApi()
-        const data = await find<ResourceT>(resourcePath, { params })
+        const data = await find<ResourceT>(resourcePath, params)
         this.setData(data)
         this.toggleLoading()
       }

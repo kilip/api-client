@@ -27,6 +27,7 @@ export function makeCreateStore<ResourceT> (resourceName: string, resourcePath: 
       async create (payload: ResourceT) {
         this.toggleLoading()
         this.error = undefined
+
         const { create } = useApi()
         const { created, error } = await create<ResourceT>(resourcePath, payload)
 

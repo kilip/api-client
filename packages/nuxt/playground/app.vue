@@ -18,13 +18,13 @@
 <script setup lang="ts">
 import { useBookResource } from './composable/books';
 
-const {find, useListStore } = useBookResource
+const { useListStore } = useBookResource
 const store = useListStore()
 const items = computed(() => store.items)
 const page = ref(1)
 
 const findBooks = async() => {
-  await find({ itemsPerPage: 5, page: page.value })
+  await store.loadItems({ itemsPerPage: 5, page: page.value })
   page.value++
 }
 </script>

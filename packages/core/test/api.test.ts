@@ -1,8 +1,21 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import type { Listener } from 'listhen'
 import { useApi } from '../src/api'
+import { mockHttpEnd, mockHttpStart } from '../../../test'
 import type { User } from './types'
+import { app } from './mock/h3'
 
 describe('useApi', () => {
+  let listener: Listener
+
+  beforeEach(async () => {
+    listener = await mockHttpStart(app)
+  })
+
+  afterEach(async () => {
+    await mockHttpEnd(listener)
+  })
+
   it('find()', async () => {
     const { find } = useApi()
 
@@ -37,7 +50,7 @@ describe('useApi', () => {
 
     const { created, hubUrl, error } = await create<User>('/users/create', {
       id: 3,
-      '@id': '/users/update',
+      '@id': '/users/create',
       '@context': '/context/User',
       '@type': 'User'
     })

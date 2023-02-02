@@ -17,13 +17,13 @@
       "node"
     ],
     "paths": {
-      "@kilip/api-client-core": [
+      "@doyolabs/api-client-core": [
         "./packages/core/src/index"
       ],
-      "@kilip/api-client-pinia": [
+      "@doyolabs/api-client-pinia": [
         "./packages/pinia/src/index"
       ],
-      "@kilip/api-client-nuxt": [
+      "@doyolabs/api-client-nuxt": [
         "./packages/nuxt/src/index"
       ],
     }

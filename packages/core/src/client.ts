@@ -82,7 +82,7 @@ export const useApiClient = () => {
     }
 
     if (fetchOptions?.params) {
-      const params = stringify(fetchOptions.params, { encodeValuesOnly: true })
+      const params = stringify(fetchOptions.params, { encodeValuesOnly: true})
       url = `${url}?${params}`
       delete fetchOptions.params
     }

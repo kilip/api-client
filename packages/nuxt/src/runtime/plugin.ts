@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from '#app'
-import { ApiCoreOptions, useApiCore } from '@kilip/api-client-core'
+import { ApiCoreOptions, useApiCore } from '@doyolabs/api-client-core'
 
 export default defineNuxtPlugin(() => {
   const core = useApiCore()

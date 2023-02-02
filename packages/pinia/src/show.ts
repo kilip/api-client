@@ -1,5 +1,5 @@
-import type { ApiResponseError } from '@kilip/api-client-core'
-import { useApi } from '@kilip/api-client-core'
+import type { ApiResponseError } from '@doyolabs/api-client-core'
+import { useApi } from '@doyolabs/api-client-core'
 import { defineStore } from 'pinia'
 
 export interface ApiShowState<ResourceT> {

@@ -6,6 +6,9 @@ export default defineBuildConfig({
     'src/index'
   ],
   externals: [
-    'ofetch'
+    '@doyolabs/api-client-core',
+    '@vue/reactivity',
+    'pinia',
+    'vue'
   ]
 })

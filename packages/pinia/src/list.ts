@@ -1,5 +1,5 @@
-import { useApi } from '@kilip/api-client-core'
-import type { ApiPagedListView, ApiFindResponse, ApiQueryParams, ApiResponseError } from '@kilip/api-client-core'
+import { useApi } from '@doyolabs/api-client-core'
+import type { ApiPagedListView, ApiFindResponse, ApiQueryParams, ApiResponseError } from '@doyolabs/api-client-core'
 import { defineStore } from 'pinia'
 
 export interface ApiListState<ResourceT> {

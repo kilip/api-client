@@ -1,4 +1,4 @@
-import { defineResource } from '@kilip/api-client-pinia'
+import { defineResource } from '@doyolabs/api-client-pinia'
 
 export interface Books {
   id: string

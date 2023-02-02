@@ -1,4 +1,4 @@
-import type { ApiHydraItem } from '@kilip/api-client-core'
+import type { ApiHydraItem } from '@doyolabs/api-client-core'
 import { makeCreateStore } from './create'
 import { makeListStore } from './list'
 import { makeUpdateStore } from './update'

@@ -48,16 +48,18 @@ importers:
       hookable: ^5.4.2
       ofetch: ^1.0.0
       qs: ^6.11.0
+      unbuild: ^1.1.1
     dependencies:
       '@types/qs': 6.9.7
       hookable: 5.4.2
       ofetch: 1.0.0
       qs: 6.11.0
+    devDependencies:
+      unbuild: 1.1.1
 
   packages/nuxt:
     specifiers:
-      '@kilip/api-client-core': workspace:^0.1.0
-      '@kilip/api-client-pinia': workspace:^0.1.0
+      '@doyolabs/api-client-pinia': workspace:*
       '@nuxt/eslint-config': ^0.1.1
       '@nuxt/kit': ^3.1.1
       '@nuxt/module-builder': ^0.2.1
@@ -71,13 +73,12 @@ importers:
       vitest: ^0.28.2
       vue: ^3.2.45
     dependencies:
-      '@kilip/api-client-pinia': link:../pinia
+      '@doyolabs/api-client-pinia': link:../pinia
       '@nuxt/kit': 3.1.1
       '@pinia/nuxt': 0.4.6_vue@3.2.45
       pinia: 2.0.29_vue@3.2.45
       vue: 3.2.45
     devDependencies:
-      '@kilip/api-client-core': link:../core
       '@nuxt/eslint-config': 0.1.1_eslint@8.33.0
       '@nuxt/module-builder': 0.2.1
       '@nuxt/schema': 3.1.1
@@ -95,18 +96,20 @@ importers:
 
   packages/pinia:
     specifiers:
-      '@kilip/api-client-core': ^0.1.0
+      '@doyolabs/api-client-core': workspace:*
       '@pinia/testing': ^0.0.14
-      ofetch: ^1.0.0
+      '@vue/reactivity': ^3.2.45
       pinia: ^2.0.29
+      unbuild: ^1.1.1
       vue: ^3.2.45
     dependencies:
-      '@kilip/api-client-core': link:../core
+      '@doyolabs/api-client-core': link:../core
+      '@vue/reactivity': 3.2.45
       pinia: 2.0.29_vue@3.2.45
       vue: 3.2.45
     devDependencies:
       '@pinia/testing': 0.0.14_pinia@2.0.29+vue@3.2.45
-      ofetch: 1.0.0
+      unbuild: 1.1.1
 
 packages:
 

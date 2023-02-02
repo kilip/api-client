@@ -1,12 +1,12 @@
 import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
-import { ApiCoreOptions, useApiCore } from '@kilip/api-client-core'
+import { ApiCoreOptions, useApiCore } from '@doyolabs/api-client-core'
 import { defu } from 'defu'
 // Module options TypeScript inteface definition
 export interface ModuleOptions {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: '@kilip/api-client-nuxt',
+    name: '@doyolabs/api-client-nuxt',
     configKey: 'api'
   },
   // Default configuration options of the Nuxt module

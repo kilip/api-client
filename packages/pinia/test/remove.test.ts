@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import './setup'
-import type { ApiResponseError } from '@kilip/api-client-core'
+import type { ApiResponseError } from '@doyolabs/api-client-core'
 import { defineResource } from '../src/resource'
 import type { User } from './types'
 

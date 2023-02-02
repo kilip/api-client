@@ -1,6 +1,5 @@
 {
-  "name": "@kilip/api-client-nuxt",
-  "version": "0.1.0",
+  "name": "@doyolabs/api-client-nuxt",
   "description": "Api Platform client module for Nuxt",
   "license": "MIT",
   "type": "module",
@@ -11,13 +10,14 @@
       "require": "./dist/module.cjs"
     }
   },
+  "packageManager": "pnpm@7.26.0",
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "module:build": "nuxt-module-build",
+    "module:build": "pnpm dev:prepare && nuxt-module-build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
@@ -27,14 +27,13 @@
     "test:watch": "vitest watch"
   },
   "dependencies": {
-    "@kilip/api-client-pinia": "workspace:^0.1.0",
+    "@doyolabs/api-client-pinia": "workspace:*",
     "@nuxt/kit": "^3.1.1",
     "@pinia/nuxt": "^0.4.6",
     "pinia": "^2.0.29",
     "vue": "^3.2.45"
   },
   "devDependencies": {
-    "@kilip/api-client-core": "workspace:^0.1.0",
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxt/module-builder": "^0.2.1",
     "@nuxt/schema": "^3.1.1",
@@ -43,5 +42,9 @@
     "eslint": "^8.32.0",
     "nuxt": "^3.1.1",
     "vitest": "^0.28.2"
+  },
+  "peerDependencies": {
+    "ofetch": "^1.0.0",
+    "hookable": "^5.4.2"
   }
 }

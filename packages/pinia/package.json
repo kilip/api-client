@@ -1,6 +1,6 @@
 {
-  "name": "@kilip/api-client-pinia",
-  "version": "0.1.0",
+  "name": "@doyolabs/api-client-pinia",
+  "version": "0.0.2",
   "description": "Api Platform client pinia integration",
   "license": "MIT",
   "sideEffects": false,
@@ -14,13 +14,13 @@
     "prepack": "unbuild"
   },
   "dependencies": {
-    "@kilip/api-client-core": "^0.1.0",
+    "@doyolabs/api-client-core": "workspace:*",
+    "@vue/reactivity": "^3.2.45",
     "pinia": "^2.0.29",
     "vue": "^3.2.45"
   },
   "devDependencies": {
-    "@kilip/api-client-core": "workspace:^0.1.0",
     "@pinia/testing": "^0.0.14",
-    "ofetch": "^1.0.0"
+    "unbuild": "^1.1.1"
   }
 }
